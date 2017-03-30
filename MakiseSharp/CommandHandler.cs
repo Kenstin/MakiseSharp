@@ -13,18 +13,18 @@ namespace MakiseSharp
 
         public async Task Install(DiscordSocketClient c)
         {
-            this.client = c;                                                 // Save an instance of the discord client.
-            this.commands = new CommandService();                                // Create a new instance of the commandservice.
+            client = c;                                                 // Save an instance of the discord client.
+            commands = new CommandService();                                // Create a new instance of the commandservice.
 
-            await this.commands.AddModulesAsync(Assembly.GetEntryAssembly());    // Load all modules from the assembly.
+            await commands.AddModulesAsync(Assembly.GetEntryAssembly());    // Load all modules from the assembly.
 
-            this.client.MessageReceived += this.HandleCommand;                    // Register the messagereceived event to handle commands.
+            client.MessageReceived += HandleCommand;                    // Register the messagereceived event to handle commands.
         }
 
         public Task ConfigureServices(IDependencyMap map)
         {
             this.map = map;
-            map.Add(this.commands);
+            map.Add(commands);
             return Task.CompletedTask;
         }
 
@@ -36,13 +36,13 @@ namespace MakiseSharp
                 return;
             }
 
-            var context = new SocketCommandContext(this.client, msg);     // Create a new command context.
+            var context = new SocketCommandContext(client, msg);     // Create a new command context.
 
             int argPos = 0; // Check if the message has either a string or mention prefix.
             if (msg.HasStringPrefix("m!", ref argPos) || //TODO add configuration thingy
-                msg.HasMentionPrefix(this.client.CurrentUser, ref argPos))
+                msg.HasMentionPrefix(client.CurrentUser, ref argPos))
             { // Try and execute a command with the given context.
-                var result = await this.commands.ExecuteAsync(context, argPos);
+                var result = await commands.ExecuteAsync(context, argPos);
 
                 if (!result.IsSuccess) // If execution failed, reply with the error message.
                 {

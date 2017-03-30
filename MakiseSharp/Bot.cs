@@ -22,7 +22,7 @@ namespace MakiseSharp
 
         public async Task TravisNotification(string json)
         {
-            if (this.client == null || string.IsNullOrEmpty(json))
+            if (client == null || string.IsNullOrEmpty(json))
             {
                 Console.WriteLine("Travis not notified cuz of null client or empty string");
                 return;
@@ -31,37 +31,37 @@ namespace MakiseSharp
             var data = JsonConvert.DeserializeObject<TravisWebhookModel>(json);
             if (data != null)
             {
-                await TravisModule.ProcessWebhook(data, this.client).ConfigureAwait(false);
+                await TravisModule.ProcessWebhook(data, client).ConfigureAwait(false);
             }
         }
 
         public async Task WriteToGeneral(string data)
         {
-            if (this.client == null || string.IsNullOrEmpty(data))
+            if (client == null || string.IsNullOrEmpty(data))
             {
                 Console.WriteLine("client or data is null");
                 return;
             }
 
-            await ((Task)this.client?.GetGuild(242641834298441729)?.GetTextChannel(242641834298441729)?.SendMessageAsync(data) ?? Task.FromResult(0));
+            await ((Task)client?.GetGuild(242641834298441729)?.GetTextChannel(242641834298441729)?.SendMessageAsync(data) ?? Task.FromResult(0));
         }
 
         public async Task Login()
         {
-            await this.Configure();
+            await Configure();
 
             // Configure the client to use a Bot token, and use our token
-            await this.client.LoginAsync(TokenType.Bot, Token);
+            await client.LoginAsync(TokenType.Bot, Token);
             // Connect the client to Discord's gateway
-            await this.client.StartAsync();
+            await client.StartAsync();
         }
 
         private async Task Configure()
         {
-            this.dependencyMap.Add(this.client);
-            await this.commandHandler.Install(this.client);
+            dependencyMap.Add(client);
+            await commandHandler.Install(client);
 
-            this.client.Log += message =>
+            client.Log += message =>
             {
                 Console.WriteLine($"{message.ToString()}");
                 return Task.CompletedTask;
