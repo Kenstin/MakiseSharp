@@ -28,7 +28,16 @@ namespace MakiseSharp
                 return;
             }
 
-            var data = JsonConvert.DeserializeObject<TravisWebhookModel>(json);
+            TravisWebhookModel data;
+            try
+            {
+                data = JsonConvert.DeserializeObject<TravisWebhookModel>(json);
+            }
+            catch (Exception)
+            {
+                return;
+            }
+
             if (data != null)
             {
                 await TravisModule.ProcessWebhook(data, client).ConfigureAwait(false);
