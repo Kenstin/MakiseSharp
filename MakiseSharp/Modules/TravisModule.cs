@@ -44,11 +44,5 @@ namespace MakiseSharp.Modules
                 ?.GetTextChannel(ChID)
                 ?.SendMessageAsync(string.Empty, embed: e.Build()) ?? Task.FromResult(0));
         }
-
-        [Command("say")]
-        public async Task Say([Remainder] string msg)
-        {
-            await ReplyAsync(msg);
-        }
     }
 }
