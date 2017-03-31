@@ -21,7 +21,7 @@ namespace MakiseSharp.Utility
         public async Task<string> ReadMessage()
         {
             var length = new byte[4];
-            if (ioStream.Read(length, 0, LengthBytes) != 4)
+            if (await ioStream.ReadAsync(length, 0, LengthBytes) != 4)
             {
                 return string.Empty;
             }
