@@ -1,10 +1,10 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.IO.Pipes;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
+using MakiseSharp.Utility;
 [assembly: InternalsVisibleTo("MakiseSharp.Tests")]
+
 namespace MakiseSharp
 {
     class Program
@@ -22,29 +22,20 @@ namespace MakiseSharp
             await bot.Login();
             for (;;)
             {
-                var pClient = new NamedPipeClientStream(".", "MakiseeSharp", PipeDirection.InOut);
+                var pClient = new NamedPipeClientStream(".", "MakiseSharp", PipeDirection.InOut);
                 await pClient.ConnectAsync();
-                pClient.ReadMode = PipeTransmissionMode.Message;
                 for (;;)
                 {
-                    var buffer = new byte[2048];
-                    var sb = new StringBuilder();
-                    sb.EnsureCapacity(2048);
-                    int read;
-                    do
-                    {
-                        read = await pClient.ReadAsync(buffer, 0, buffer.Length);
-                        sb.Append(Encoding.ASCII.GetString(buffer, 0, read));
-                    }
-                    while (read > 0 && !pClient.IsMessageComplete);
+                    var streamString = new StringStream(pClient);
+                    var message = await streamString.ReadMessage();
 
-                    if (read == 0)
+                    if (string.IsNullOrEmpty(message))
                     {
                         pClient.Dispose();
                         break;
                     }
 
-                    await bot.TravisNotification(sb.ToString());
+                    await bot.TravisNotification(message);
                 }
             }
         }
