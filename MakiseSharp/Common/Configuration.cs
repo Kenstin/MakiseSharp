@@ -31,7 +31,6 @@ namespace MakiseSharp.Common
             Console.WriteLine($"Using prefix: {config.Prefix}");
             Console.WriteLine($"Bot owners' IDs': {string.Join(", ", config.Owners)}");
             return config;
-
         }
 
         private static void EnsureExists()
