@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using MakiseSharp.Common;
 using MakiseSharp.Models;
 using MakiseSharp.Modules;
 using Newtonsoft.Json;
@@ -11,7 +12,6 @@ namespace MakiseSharp
 {
     internal class Bot
     {
-        private const string Token = "Mjg5NTEyNjE2NTU5Mzc4NDMy.C6NdJg.K_NfXCH1oCHVdINApOIt9jz1ebU";
         private readonly DiscordSocketClient client = new DiscordSocketClient(new DiscordSocketConfig()
         {
             LogLevel = LogSeverity.Info
@@ -60,7 +60,7 @@ namespace MakiseSharp
             await Configure();
 
             // Configure the client to use a Bot token, and use our token
-            await client.LoginAsync(TokenType.Bot, Token);
+            await client.LoginAsync(TokenType.Bot, dependencyMap.Get<Configuration>().Token);
             // Connect the client to Discord's gateway
             await client.StartAsync();
         }
@@ -68,7 +68,9 @@ namespace MakiseSharp
         private async Task Configure()
         {
             dependencyMap.Add(client);
-            await commandHandler.Install(client);
+            dependencyMap.Add(Configuration.Get());
+
+            await commandHandler.Install(client, dependencyMap);
 
             client.Log += message =>
             {
