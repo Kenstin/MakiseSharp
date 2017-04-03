@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace MakiseSharp.Common
@@ -22,11 +23,17 @@ namespace MakiseSharp.Common
         /// <returns> Deserialized configuration </returns>
         public static Configuration Get()
         {
+            EnsureExists();
             string file = Path.Combine(AppContext.BaseDirectory, FileName);
-            return JsonConvert.DeserializeObject<Configuration>(File.ReadAllText(file));
+            var config = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText(file));
+            Console.WriteLine("Configuration loaded.");
+            Console.WriteLine($"Using token: {config.Token}");
+            Console.WriteLine($"Using prefix: {config.Prefix}");
+            Console.WriteLine($"Bot owners' IDs': {string.Join(", ", config.Owners)}");
+            return config;
         }
 
-        public static void EnsureExists()
+        private static void EnsureExists()
         {
             string file = Path.Combine(AppContext.BaseDirectory, FileName);
             if (!File.Exists(file)) // Check if the configuration file exists.
@@ -45,12 +52,10 @@ namespace MakiseSharp.Common
                 config.Token = token;
                 config.SaveJson(); // Save the new configuration object to file.
             }
-
-            Console.WriteLine("Configuration Loaded");
         }
 
         /// <summary> Save the configuration to the path specified in FileName. </summary>
-        public void SaveJson()
+        private void SaveJson()
         {
             string file = Path.Combine(AppContext.BaseDirectory, FileName);
             File.WriteAllText(file, ToJson());
@@ -58,7 +63,7 @@ namespace MakiseSharp.Common
 
         /// <summary> Convert the configuration to a json string. </summary>
         /// <returns> Serialized configuration json string</returns>
-        public string ToJson()
+        private string ToJson()
             => JsonConvert.SerializeObject(this, Formatting.Indented);
     }
 }

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Discord.Commands;
 using Discord.WebSocket;
+using MakiseSharp.Common;
 
 namespace MakiseSharp
 {
@@ -9,23 +10,18 @@ namespace MakiseSharp
     {
         private CommandService commands;
         private DiscordSocketClient client;
-        private IDependencyMap map;
+        private string prefix;
 
-        public async Task Install(DiscordSocketClient c)
+        public async Task Install(DiscordSocketClient c, IDependencyMap depMap)
         {
             client = c;                                                 // Save an instance of the discord client.
             commands = new CommandService();                                // Create a new instance of the commandservice.
 
             await commands.AddModulesAsync(Assembly.GetEntryAssembly());    // Load all modules from the assembly.
 
-            client.MessageReceived += HandleCommand;                    // Register the messagereceived event to handle commands.
-        }
+            prefix = depMap.Get<Configuration>().Prefix;
 
-        public Task ConfigureServices(IDependencyMap map)
-        {
-            this.map = map;
-            map.Add(commands);
-            return Task.CompletedTask;
+            client.MessageReceived += HandleCommand;                    // Register the messagereceived event to handle commands.
         }
 
         private async Task HandleCommand(SocketMessage s)
@@ -39,7 +35,7 @@ namespace MakiseSharp
             var context = new SocketCommandContext(client, msg);     // Create a new command context.
 
             int argPos = 0; // Check if the message has either a string or mention prefix.
-            if (msg.HasStringPrefix("m!", ref argPos) || //TODO add configuration thingy
+            if (msg.HasStringPrefix(prefix, ref argPos) ||
                 msg.HasMentionPrefix(client.CurrentUser, ref argPos))
             { // Try and execute a command with the given context.
                 var result = await commands.ExecuteAsync(context, argPos);
