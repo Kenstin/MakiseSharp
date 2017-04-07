@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO.Pipes;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -7,14 +8,24 @@ using MakiseSharp.Utility;
 
 namespace MakiseSharp
 {
+    [SuppressMessage("StyleCop.CSharp.SpacingRules", "SA1002:SemicolonsMustBeSpacedCorrectly", Justification = "Reviewed.")]
     class Program
     {
         static void Main(string[] args)
         {
-            new Program().Run().GetAwaiter().GetResult();
+            for (;;)
+            {
+                try
+                {
+                    new Program().Run().GetAwaiter().GetResult();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Disconnected: {e.Message}");
+                }
+            }
         }
 
-        [SuppressMessage("StyleCop.CSharp.SpacingRules", "SA1002:SemicolonsMustBeSpacedCorrectly", Justification = "Reviewed.")]
         private async Task Run()
         {
             var bot = new Bot();
