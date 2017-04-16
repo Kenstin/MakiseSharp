@@ -11,7 +11,7 @@ namespace MakiseSharp.Common
         public static string FileName { get; } = "config/configuration.json";
 
         /// <summary> Gets or sets ids of users who will have owner access to the bot. </summary>
-        public ulong[] Owners { get; set; }
+        public ulong[] Owners { get; set; } = { };
 
         /// <summary> Gets or sets your bot's command prefix. </summary>
         public string Prefix { get; set; } = "!";
