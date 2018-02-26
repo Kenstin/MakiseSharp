@@ -16,6 +16,7 @@ addons:
     packages:
     - sshpass
     - bzip2
+    - pv
 script: ./scripts/build.sh
 deploy:
   skip_cleanup: true
