@@ -1,8 +1,5 @@
-language: csharp
-dist: trusty
-solution: MakiseSharp.sln
-mono: none
-dotnet: 1.0.1
+services:
+  - docker
 notifications:
   email: false
   webhooks:
