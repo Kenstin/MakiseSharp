@@ -1,8 +1,10 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using Discord.Commands;
 using Discord.WebSocket;
 using MakiseSharp.Common;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MakiseSharp
 {
@@ -12,14 +14,13 @@ namespace MakiseSharp
         private DiscordSocketClient client;
         private string prefix;
 
-        public async Task Install(DiscordSocketClient c, IDependencyMap depMap)
+        public async Task Install(DiscordSocketClient c, IServiceProvider services)
         {
             client = c;                                                 // Save an instance of the discord client.
             commands = new CommandService();                                // Create a new instance of the commandservice.
 
             await commands.AddModulesAsync(Assembly.GetEntryAssembly());    // Load all modules from the assembly.
-
-            prefix = depMap.Get<Configuration>().Prefix;
+            prefix = services.GetService<Configuration>().Prefix;
 
             client.MessageReceived += HandleCommand;                    // Register the messagereceived event to handle commands.
         }
