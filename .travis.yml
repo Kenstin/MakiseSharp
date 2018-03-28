@@ -1,5 +1,8 @@
-services:
-  - docker
+language: csharp
+dist: trusty
+solution: MakiseSharp.sln
+mono: none
+dotnet: 1.0.1
 notifications:
   email: false
   webhooks:
@@ -15,8 +18,6 @@ addons:
   apt:
     packages:
     - sshpass
-    - bzip2
-    - pv
 script: ./scripts/build.sh
 deploy:
   skip_cleanup: true

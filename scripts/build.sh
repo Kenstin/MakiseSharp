@@ -15,4 +15,6 @@ if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
   echo -e "\e[36m\e[1mBuild triggered for PR #${TRAVIS_PULL_REQUEST} to branch\"${TRAVIS_BRANCH}\""
 fi
 
-docker build -t makisekurisu .
+dotnet restore
+dotnet test MakiseSharp.Tests/MakiseSharp.Tests.csproj
+dotnet publish MakiseSharp/MakiseSharp.csproj -c Release

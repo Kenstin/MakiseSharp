@@ -30,7 +30,7 @@ namespace MakiseSharp
         {
             var bot = new Bot();
 
-            await bot.Start();
+            await bot.Login();
             for (;;)
             {
                 var pClient = new NamedPipeClientStream(".", "MakiseSharp", PipeDirection.InOut);

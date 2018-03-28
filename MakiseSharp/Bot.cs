@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
 using MakiseSharp.Common;
 using MakiseSharp.Models;
 using MakiseSharp.Modules;
-using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
 namespace MakiseSharp
@@ -17,9 +17,8 @@ namespace MakiseSharp
             LogLevel = LogSeverity.Info
         });
 
+        private readonly IDependencyMap dependencyMap = new DependencyMap();
         private readonly CommandHandler commandHandler = new CommandHandler();
-
-        private IServiceProvider services;
 
         public async Task TravisNotification(string json)
         {
@@ -56,23 +55,22 @@ namespace MakiseSharp
             await ((Task)client?.GetGuild(242641834298441729)?.GetTextChannel(242641834298441729)?.SendMessageAsync(data) ?? Task.FromResult(0));
         }
 
-        public async Task Start()
+        public async Task Login()
         {
-            services = new ServiceCollection()
-                .AddSingleton(client)
-                .AddSingleton(Configuration.Get())
-                .BuildServiceProvider();
             await Configure();
 
             // Configure the client to use a Bot token, and use our token
-            await client.LoginAsync(TokenType.Bot, services.GetService<Configuration>().Token);
+            await client.LoginAsync(TokenType.Bot, dependencyMap.Get<Configuration>().Token);
             // Connect the client to Discord's gateway
             await client.StartAsync();
         }
 
         private async Task Configure()
         {
-            await commandHandler.Install(client, services);
+            dependencyMap.Add(client);
+            dependencyMap.Add(Configuration.Get());
+
+            await commandHandler.Install(client, dependencyMap);
 
             client.Log += message =>
             {
