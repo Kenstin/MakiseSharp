@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace MakiseSharp.Common
 {
-    class Configuration
+    public class Configuration
     {
         [JsonIgnore]
         public static string FileName { get; } = "config/configuration.json";
@@ -19,6 +19,12 @@ namespace MakiseSharp.Common
         /// <summary> Gets or sets your bot's login token. </summary>
         public string Token { get; set; } = string.Empty;
 
+        /// <summary> Gets or sets your guild id. </summary>
+        public ulong GuildID { get; set; } = 242641834298441729;
+
+        /// <summary> Gets or sets your channel id. </summary>
+        public ulong ChannelID { get; set; } = 272089398445735936;
+
         /// <summary> Load the configuration from the path specified in FileName. </summary>
         /// <returns> Deserialized configuration </returns>
         public static Configuration Get()
@@ -30,6 +36,8 @@ namespace MakiseSharp.Common
             Console.WriteLine($"Using token: {config.Token}");
             Console.WriteLine($"Using prefix: {config.Prefix}");
             Console.WriteLine($"Bot owners' IDs': {string.Join(", ", config.Owners)}");
+            Console.WriteLine($"Guild ID: {config.GuildID}");
+            Console.WriteLine($"Channel ID: {config.ChannelID}");
             return config;
         }
 

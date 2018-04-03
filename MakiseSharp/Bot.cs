@@ -41,19 +41,8 @@ namespace MakiseSharp
 
             if (data != null)
             {
-                await TravisModule.ProcessWebhook(data, client).ConfigureAwait(false);
+                await TravisModule.ProcessWebhook(data, client, services.GetService<Configuration>()).ConfigureAwait(false);
             }
-        }
-
-        public async Task WriteToGeneral(string data)
-        {
-            if (client == null || string.IsNullOrEmpty(data))
-            {
-                Console.WriteLine("client or data is null");
-                return;
-            }
-
-            await ((Task)client?.GetGuild(242641834298441729)?.GetTextChannel(242641834298441729)?.SendMessageAsync(data) ?? Task.FromResult(0));
         }
 
         public async Task Start()
