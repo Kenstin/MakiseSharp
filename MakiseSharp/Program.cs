@@ -29,12 +29,25 @@ namespace MakiseSharp
         private async Task Run()
         {
             var bot = new Bot();
-
             await bot.Start();
+
             for (;;)
             {
-                var pClient = new NamedPipeClientStream(".", "MakiseSharp", PipeDirection.InOut);
-                await pClient.ConnectAsync();
+                var pClient = new NamedPipeClientStream(".", "makisesharp", PipeDirection.InOut);
+                var connected = false;
+                while (!connected)
+                {
+                    try
+                    {
+                        await pClient.ConnectAsync(100);
+                        connected = true;
+                    }
+                    catch (Exception)
+                    {
+                        await Task.Delay(20000);
+                    }
+                }
+
                 for (;;)
                 {
                     var streamString = new StringStream(pClient);
