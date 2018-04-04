@@ -2,7 +2,7 @@ language: csharp
 dist: trusty
 solution: MakiseSharp.sln
 mono: none
-dotnet: 1.0.1
+dotnet: 2.1.103
 notifications:
   email: false
   webhooks:
