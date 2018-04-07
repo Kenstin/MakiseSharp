@@ -17,7 +17,7 @@ namespace MakiseSharp.Modules
             var eAuthor = new EmbedAuthorBuilder { Name = data.author_name, Url = data.compare_url.ToString() }; // Url = githubowy profil? iconurl ikonka z profilu
             var eFooter = new EmbedFooterBuilder
             {
-                IconUrl = "https://enterprise.travis-ci.com/img/mascot.png",
+                IconUrl = "https://travis-ci.com/images/logos/TravisCI-Mascot-1.png",
                 Text = "Travis CI"
             };
             var color = data.Failed ? Colors.Red : Colors.Green;
